@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mento Protocol Quiz</title>
+<style>
+  body { font-family: "Poppins", sans-serif; background: #0b0f19; color: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+  h1 { color: #00d084; margin-bottom: 10px; }
+  .quiz-container { background: #111827; border-radius: 16px; padding: 20px; width: 90%; max-width: 600px; box-shadow: 0 0 20px rgba(0,0,0,0.4); }
+  .question { font-size: 1.1em; margin-bottom: 10px; }
+  .option { background: #1f2937; padding: 10px; border-radius: 10px; margin: 5px 0; cursor: pointer; transition: 0.3s; }
+  .option:hover { background: #374151; }
+  .option.correct { background: #00d084; color: #000; }
+  .option.wrong { background: #ef4444; color: #fff; }
+  #score { margin-top: 15px; font-size: 1.2em; }
+  button { background: #00d084; border: none; padding: 10px 20px; border-radius: 10px; margin-top: 15px; cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+  <h1>🪙 Mento Protocol Quiz</h1>
+  <div class="quiz-container">
+    <div id="quiz"></div>
+    <div id="score"></div>
+    <button id="next-btn">Next</button>
+  </div>
+
+<script>
+const quizData = [
+  { q: "What is Mento?", options: ["A centralized stablecoin issuer", "A decentralized, multi-currency stable asset protocol", "A lending platform", "A crypto exchange"], answer: 1 },
+  { q: "What stability model does Mento use?", options: ["Fully algorithmic", "Fiat-backed", "Hybrid stability model", "Proof-of-stake"], answer: 2 },
+  { q: "What backs Mento’s stable assets?", options: ["U.S. dollar reserves", "Diversified, over-collateralized reserves", "NFTs", "Real estate"], answer: 1 },
+  { q: "What mechanism maintains Mento’s price stability?", options: ["Arbitrage through minting and burning", "Centralized intervention", "Random supply", "Manual oracle updates"], answer: 0 },
+  { q: "Which feature does NOT exist in Mento?", options: ["Circuit breakers", "Oracle safety mechanisms", "Central bank oversight", "Trading limits"], answer: 2 },
+  { q: "How many stablecoins does Mento currently support?", options: ["1", "5", "10", "15+"], answer: 3 },
+  { q: "What distinguishes Mento?", options: ["Multi-currency and decentralized", "USD-only", "Centralized governance", "Requires KYC"], answer: 0 },
+  { q: "Who governs Mento?", options: ["Centralized company", "MENTO token holders", "Celo Foundation", "Validators"], answer: 1 },
+  { q: "What data is visible onchain?", options: ["Developer salaries", "Reserve holdings", "Private transactions", "Off-chain records"], answer: 1 },
+  { q: "Where can users learn about governance?", options: ["mento.org", "governance.mento.org", "docs.mento.ai", "github.com/mento"], answer: 1 }
+];
+
+let current = 0;
+let score = 0;
+
+const quiz = document.getElementById("quiz");
+const scoreDisplay = document.getElementById("score");
+const nextBtn = document.getElementById("next-btn");
+
+function loadQuestion() {
+  const data = quizData[current];
+  quiz.innerHTML = `<div class='question'>${data.q}</div>` + 
+    data.options.map((opt, i) => `<div class='option' onclick='selectOption(${i})'>${opt}</div>`).join("");
+  nextBtn.style.display = "none";
+}
+loadQuestion();
+
+function selectOption(i) {
+  const options = document.querySelectorAll(".option");
+  options.forEach(opt => opt.style.pointerEvents = "none");
+  if (i === quizData[current].answer) {
+    options[i].classList.add("correct");
+    score++;
+  } else {
+    options[i].classList.add("wrong");
+    options[quizData[current].answer].classList.add("correct");
+  }
+  nextBtn.style.display = "block";
+}
+
+nextBtn.addEventListener("click", () => {
+  current++;
+  if (current < quizData.length) {
+    loadQuestion();
+  } else {
+    quiz.innerHTML = `<h2>Your final score: ${score} / ${quizData.length}</h2>`;
+    nextBtn.style.display = "none";
+  }
+});
+</script>
+</body>
+</html>
